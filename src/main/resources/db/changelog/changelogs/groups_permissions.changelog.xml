@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                        http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+
+    <changeSet id="dda0c9c8-3c97-4851-93c2-374895235bbe" author="gabriel">
+        <createTable tableName="groups_permissions">
+            <column name="group_id" type="UUID" />
+            <column name="permission_id" type="UUID" />
+        </createTable>
+
+        <addForeignKeyConstraint
+            baseTableName="groups_permissions"
+            baseColumnNames="group_id"
+            constraintName="fk_groups_permissions"
+            referencedTableName="groups"
+            referencedColumnNames="id"
+        />
+
+        <addForeignKeyConstraint
+            baseTableName="groups_permissions"
+            baseColumnNames="permission_id"
+            constraintName="fk_permissions_groups"
+            referencedTableName="permissions"
+            referencedColumnNames="id"
+        />
+    </changeSet>
+</databaseChangeLog>

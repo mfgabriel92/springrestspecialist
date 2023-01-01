@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                        http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+
+    <include file="classpath:db/changelog/changelogs/cities.changelog-1.0.xml" />
+    <include file="classpath:db/changelog/changelogs/states.changelog-1.0.xml" />
+    <include file="classpath:db/changelog/changelogs/fk_cities_states.changelog.xml" />
+    <include file="classpath:db/changelog/changelogs/cuisines.changelog-1.0.xml" />
+    <include file="classpath:db/changelog/changelogs/restaurants.changelog-1.0.xml" />
+    <include file="classpath:db/changelog/changelogs/payment_methods.changelog-1.0.xml" />
+    <include file="classpath:db/changelog/changelogs/fk_restaurants_cuisines.xml" />
+    <include file="classpath:db/changelog/changelogs/restaurants_payment_methods.changelog.xml" />
+    <include file="classpath:db/changelog/changelogs/permissions.changelog-1.0.xml" />
+    <include file="classpath:db/changelog/changelogs/groups.changelog-1.0.xml" />
+    <include file="classpath:db/changelog/changelogs/groups_permissions.changelog.xml" />
+    <include file="classpath:db/changelog/changelogs/users.changelog-1.0.xml" />
+    <include file="classpath:db/changelog/changelogs/groups_users.changelog.xml" />
+    <include file="classpath:db/changelog/changelogs/products.changelog-1.0.xml" />
+    <include file="classpath:db/changelog/changelogs/fk_products_restaurants.xml" />
+    <include file="classpath:db/changelog/changelogs/orders.changelog-1.0.xml" />
+    <include file="classpath:db/changelog/changelogs/order_items.changelog-1.0.xml" />
+    <include
+        file="classpath:db/changelog/changelogs/fk_orders_restaurants_payment_methods_users_cities.xml" />
+    <include file="classpath:db/changelog/changelogs/fk_order_items_orders_products.xml" />
+</databaseChangeLog>

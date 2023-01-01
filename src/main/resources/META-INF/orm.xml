@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings
+    xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    version="2.2">
+    <named-query name="City.findAllByState">
+        <query>
+            FROM City c
+            INNER JOIN State s ON s.id = c.state
+            WHERE s.name LIKE CONCAT('%', :stateName, '%')
+        </query>
+    </named-query>
+</entity-mappings>

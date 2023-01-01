@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                        http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+
+    <changeSet id="f2176be9-6e3b-402f-955e-1fcfed2e1072" author="gabriel">
+        <createTable tableName="restaurants">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" />
+            </column>
+            <column name="name" type="VARCHAR">
+                <constraints nullable="false" />
+            </column>
+            <column name="shipping_rate" type="DECIMAL">
+                <constraints nullable="false" />
+            </column>
+            <column name="is_active" type="BOOLEAN">
+                <constraints nullable="false" />
+            </column>
+            <column name="is_open" type="BOOLEAN">
+                <constraints nullable="false" />
+            </column>
+            <column name="zip_code" type="VARCHAR">
+                <constraints nullable="false" />
+            </column>
+            <column name="street_name" type="VARCHAR">
+                <constraints nullable="false" />
+            </column>
+            <column name="street_number" type="VARCHAR">
+                <constraints nullable="false" />
+            </column>
+            <column name="apartment_number" type="VARCHAR" />
+            <column name="neighborhood" type="VARCHAR">
+                <constraints nullable="false" />
+            </column>
+            <column name="cuisine_id" type="UUID"></column>
+            <column name="city_id" type="UUID"></column>
+            <column name="created_at" type="TIMESTAMP" />
+            <column name="updated_at" type="TIMESTAMP" />
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

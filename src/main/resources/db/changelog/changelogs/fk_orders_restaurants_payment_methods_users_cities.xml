@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                        http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+
+    <changeSet id="ef3ae586-cf11-48f5-99d3-5c15ad2cb266" author="gabriel">
+        <addForeignKeyConstraint
+            baseTableName="orders"
+            baseColumnNames="restaurant_id"
+            constraintName="fk_orders_restaurants"
+            referencedTableName="restaurants"
+            referencedColumnNames="id"
+        />
+        <addForeignKeyConstraint
+            baseTableName="orders"
+            baseColumnNames="payment_method_id"
+            constraintName="fk_orders_payment_methods"
+            referencedTableName="payment_methods"
+            referencedColumnNames="id"
+        />
+        <addForeignKeyConstraint
+            baseTableName="orders"
+            baseColumnNames="user_id"
+            constraintName="fk_orders_users"
+            referencedTableName="users"
+            referencedColumnNames="id"
+        />
+        <addForeignKeyConstraint
+            baseTableName="orders"
+            baseColumnNames="city_id"
+            constraintName="fk_orders_cities"
+            referencedTableName="cities"
+            referencedColumnNames="id"
+        />
+    </changeSet>
+</databaseChangeLog>

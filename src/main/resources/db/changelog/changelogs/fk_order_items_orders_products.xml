@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                        http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+
+    <changeSet id="a9a24306-d5b1-48e4-a631-ae7321cdbae9" author="gabriel">
+        <addForeignKeyConstraint
+            baseTableName="order_items"
+            baseColumnNames="order_id"
+            constraintName="fk_order_items_orders"
+            referencedTableName="orders"
+            referencedColumnNames="id"
+        />
+        <addForeignKeyConstraint
+            baseTableName="order_items"
+            baseColumnNames="product_id"
+            constraintName="fk_order_items_products"
+            referencedTableName="products"
+            referencedColumnNames="id"
+        />
+    </changeSet>
+</databaseChangeLog>

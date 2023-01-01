@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                        http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+
+    <changeSet id="a53e742d-99ca-4c57-94fb-9de501518047" author="gabriel">
+        <createTable tableName="restaurants_payment_methods">
+            <column name="restaurant_id" type="UUID" />
+            <column name="payment_method_id" type="UUID" />
+        </createTable>
+
+        <addForeignKeyConstraint
+            baseTableName="restaurants_payment_methods"
+            baseColumnNames="restaurant_id"
+            constraintName="fk_restaurants_payment_methods"
+            referencedTableName="restaurants"
+            referencedColumnNames="id"
+        />
+
+        <addForeignKeyConstraint
+            baseTableName="restaurants_payment_methods"
+            baseColumnNames="payment_method_id"
+            constraintName="fk_payment_methods_restaurants"
+            referencedTableName="payment_methods"
+            referencedColumnNames="id"
+        />
+    </changeSet>
+</databaseChangeLog>

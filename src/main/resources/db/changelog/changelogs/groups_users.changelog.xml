@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                        http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+
+    <changeSet id="2b67d01b-1472-4b9a-9b35-802c978b3261" author="gabriel">
+        <createTable tableName="groups_users">
+            <column name="group_id" type="UUID" />
+            <column name="user_id" type="UUID" />
+        </createTable>
+
+        <addForeignKeyConstraint
+            baseTableName="groups_users"
+            baseColumnNames="group_id"
+            constraintName="fk_groups_users"
+            referencedTableName="groups"
+            referencedColumnNames="id"
+        />
+
+        <addForeignKeyConstraint
+            baseTableName="groups_users"
+            baseColumnNames="user_id"
+            constraintName="fk_users_groups"
+            referencedTableName="users"
+            referencedColumnNames="id"
+        />
+    </changeSet>
+</databaseChangeLog>
