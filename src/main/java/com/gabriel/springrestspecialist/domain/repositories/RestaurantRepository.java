@@ -16,6 +16,6 @@ public interface RestaurantRepository
     @Query("FROM Restaurant WHERE shippingRate = 0")
     List<Restaurant> findAllWithNoShippingRates();
 
-    @Query("FROM Restaurant r JOIN FETCH r.cuisine LEFT JOIN FETCH r.paymentMethods")
+    @Query("SELECT DISTINCT r FROM Restaurant r JOIN FETCH r.cuisine LEFT JOIN FETCH r.paymentMethods")
     List<Restaurant> findAll();
 }
