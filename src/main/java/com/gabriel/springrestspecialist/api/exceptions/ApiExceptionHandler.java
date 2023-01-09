@@ -1,5 +1,6 @@
 package com.gabriel.springrestspecialist.api.exceptions;
 
+import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -189,6 +190,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         HttpStatus status,
         String detail) {
         return ApiException.builder()
+            .timestamp(LocalDateTime.now())
             .title(type.getTitle())
             .type(type.getUri())
             .status(status.value())
