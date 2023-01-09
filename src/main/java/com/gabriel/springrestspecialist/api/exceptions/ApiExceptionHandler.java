@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.fasterxml.jackson.databind.exc.IgnoredPropertyException;
@@ -39,7 +40,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<?> handleEntityNotFoundException(EntityNotFoundException ex, WebRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
         ApiException exception = apiExceptionBuilder(
-            ApiExceptionType.ENTITY_NOT_FOUND,
+            ApiExceptionType.RESOURCE_NOT_FOUND,
             status,
             ex.getMessage()).build();
 
@@ -95,6 +96,23 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
             "The body of the request has not been understood. Check for any syntax error and try again.").build();
 
         return handleExceptionInternal(ex, exception, headers, status, request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleNoHandlerFoundException(
+        NoHandlerFoundException ex,
+        HttpHeaders headers,
+        HttpStatus status,
+        WebRequest request) {
+        String message = "The URL resource '%s' does not exist";
+        String detail = String.format(message, ex.getRequestURL());
+
+        ApiException exception = apiExceptionBuilder(
+            ApiExceptionType.RESOURCE_NOT_FOUND,
+            status,
+            detail).build();
+
+        return handleExceptionInternal(ex, exception, new HttpHeaders(), status, request);
     }
 
     @Override
