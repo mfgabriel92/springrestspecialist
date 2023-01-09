@@ -11,6 +11,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.fasterxml.jackson.databind.exc.IgnoredPropertyException;
@@ -24,36 +25,52 @@ import com.gabriel.springrestspecialist.domain.exceptions.EntityNotFoundExceptio
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(DomainException.class)
-    public ResponseEntity<?> handleDomainException(DomainException e, WebRequest request) {
+    public ResponseEntity<?> handleDomainException(DomainException ex, WebRequest request) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         ApiException exception = apiExceptionBuilder(
             ApiExceptionType.BAD_REQUEST,
             status,
-            e.getMessage()).build();
+            ex.getMessage()).build();
 
-        return handleExceptionInternal(e, exception, new HttpHeaders(), status, request);
+        return handleExceptionInternal(ex, exception, new HttpHeaders(), status, request);
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<?> handleEntityNotFoundException(EntityNotFoundException e, WebRequest request) {
+    public ResponseEntity<?> handleEntityNotFoundException(EntityNotFoundException ex, WebRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
         ApiException exception = apiExceptionBuilder(
             ApiExceptionType.ENTITY_NOT_FOUND,
             status,
-            e.getMessage()).build();
+            ex.getMessage()).build();
 
-        return handleExceptionInternal(e, exception, new HttpHeaders(), status, request);
+        return handleExceptionInternal(ex, exception, new HttpHeaders(), status, request);
     }
 
     @ExceptionHandler(EntityInUseException.class)
-    public ResponseEntity<?> handleEntityInUseException(EntityInUseException e, WebRequest request) {
+    public ResponseEntity<?> handleEntityInUseException(EntityInUseException ex, WebRequest request) {
         HttpStatus status = HttpStatus.CONFLICT;
         ApiException exception = apiExceptionBuilder(
             ApiExceptionType.ENTITY_IN_USE,
             status,
-            e.getMessage()).build();
+            ex.getMessage()).build();
 
-        return handleExceptionInternal(e, exception, new HttpHeaders(), status, request);
+        return handleExceptionInternal(ex, exception, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<?> handleMethodArgumentTypeMismatchException(
+        MethodArgumentTypeMismatchException ex,
+        WebRequest request) {
+        HttpStatus status = HttpStatus.CONFLICT;
+        String message = "The URL parameter '%s' received the value '%s', which is invalid. Please, enter a compatible value of type '%s'";
+        String detail = String.format(message, ex.getName(), ex.getValue(), ex.getRequiredType().getSimpleName());
+
+        ApiException exception = apiExceptionBuilder(
+            ApiExceptionType.INVALID_PARAMETER,
+            status,
+            detail).build();
+
+        return handleExceptionInternal(ex, exception, new HttpHeaders(), status, request);
     }
 
     @Override

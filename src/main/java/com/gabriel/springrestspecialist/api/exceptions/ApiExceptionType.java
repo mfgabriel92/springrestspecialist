@@ -9,7 +9,8 @@ public enum ApiExceptionType {
     BAD_REQUEST("Bad request", HttpStatus.BAD_REQUEST), //
     MESSAGE_NOT_READABLE("Message not readable", HttpStatus.BAD_REQUEST), //
     ENTITY_NOT_FOUND("Entity not found", HttpStatus.NOT_FOUND), //
-    ENTITY_IN_USE("Entity in use", HttpStatus.CONFLICT);
+    ENTITY_IN_USE("Entity in use", HttpStatus.CONFLICT), //
+    INVALID_PARAMETER("Invalid parameter", HttpStatus.BAD_REQUEST);
 
     private String title;
     private String uri;
