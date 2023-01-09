@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.fasterxml.jackson.databind.exc.IgnoredPropertyException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.fasterxml.jackson.databind.exc.PropertyBindingException;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.gabriel.springrestspecialist.domain.exceptions.DomainException;
 import com.gabriel.springrestspecialist.domain.exceptions.EntityInUseException;
 import com.gabriel.springrestspecialist.domain.exceptions.EntityNotFoundException;
@@ -63,6 +66,10 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         if (rootCause instanceof InvalidFormatException e) {
             return handleInvalidFormatException(e, headers, status, request);
+        } else if (rootCause instanceof UnrecognizedPropertyException e) {
+            return handlePropertyBindingException(e, headers, status, request);
+        } else if (rootCause instanceof IgnoredPropertyException e) {
+            return handlePropertyBindingException(e, headers, status, request);
         }
 
         ApiException exception = apiExceptionBuilder(
@@ -105,6 +112,22 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
             .collect(Collectors.joining("."));
         String message = "The property '%s' received the value '%s', but they are incompatible. Please, choose a compatible value for '%s'.";
         String detail = String.format(message, path, ex.getValue(), ex.getTargetType().getSimpleName());
+
+        ApiException exception = apiExceptionBuilder(
+            ApiExceptionType.MESSAGE_NOT_READABLE,
+            status,
+            detail).build();
+
+        return handleExceptionInternal(ex, exception, headers, status, request);
+    }
+
+    private ResponseEntity<Object> handlePropertyBindingException(
+        PropertyBindingException ex,
+        HttpHeaders headers,
+        HttpStatus status,
+        WebRequest request) {
+        String message = "The property '%s' does not exist in '%s'.";
+        String detail = String.format(message, ex.getPropertyName(), ex.getReferringClass().getSimpleName());
 
         ApiException exception = apiExceptionBuilder(
             ApiExceptionType.MESSAGE_NOT_READABLE,
