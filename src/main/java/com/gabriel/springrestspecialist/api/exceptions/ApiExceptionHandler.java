@@ -25,8 +25,20 @@ import com.gabriel.springrestspecialist.domain.exceptions.EntityNotFoundExceptio
 
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Object> handleUncaughtException(Exception ex, WebRequest request) {
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        ApiException exception = apiExceptionBuilder(
+            ApiExceptionType.SYSTEM_EXCEPTION,
+            status,
+            "An internal error has occurred. Try again, and if the problem persists, please contact the system admin")
+                .build();
+
+        return handleExceptionInternal(ex, exception, new HttpHeaders(), status, request);
+    }
+
     @ExceptionHandler(DomainException.class)
-    public ResponseEntity<?> handleDomainException(DomainException ex, WebRequest request) {
+    public ResponseEntity<Object> handleDomainException(DomainException ex, WebRequest request) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         ApiException exception = apiExceptionBuilder(
             ApiExceptionType.BAD_REQUEST,
@@ -37,7 +49,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<?> handleEntityNotFoundException(EntityNotFoundException ex, WebRequest request) {
+    public ResponseEntity<Object> handleEntityNotFoundException(EntityNotFoundException ex, WebRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
         ApiException exception = apiExceptionBuilder(
             ApiExceptionType.RESOURCE_NOT_FOUND,
@@ -48,7 +60,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(EntityInUseException.class)
-    public ResponseEntity<?> handleEntityInUseException(EntityInUseException ex, WebRequest request) {
+    public ResponseEntity<Object> handleEntityInUseException(EntityInUseException ex, WebRequest request) {
         HttpStatus status = HttpStatus.CONFLICT;
         ApiException exception = apiExceptionBuilder(
             ApiExceptionType.ENTITY_IN_USE,
@@ -59,7 +71,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<?> handleMethodArgumentTypeMismatchException(
+    public ResponseEntity<Object> handleMethodArgumentTypeMismatchException(
         MethodArgumentTypeMismatchException ex,
         WebRequest request) {
         HttpStatus status = HttpStatus.CONFLICT;
