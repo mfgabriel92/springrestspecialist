@@ -12,6 +12,10 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -25,14 +29,19 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class Restaurant extends BaseEntity {
+    @NotBlank
     private String name;
 
+    @NotNull
+    @PositiveOrZero
     private BigDecimal shippingRate;
 
     private Boolean isActive = false;
 
     private Boolean isOpen = false;
 
+    @Valid
+    @NotNull
     @ManyToOne
     private Cuisine cuisine;
 

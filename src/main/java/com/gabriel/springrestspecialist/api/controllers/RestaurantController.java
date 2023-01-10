@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -76,7 +78,7 @@ public class RestaurantController {
     }
 
     @PostMapping
-    public ResponseEntity<Restaurant> save(@RequestBody Restaurant restaurant) {
+    public ResponseEntity<Restaurant> save(@RequestBody @Valid Restaurant restaurant) {
         try {
             Restaurant newCity = service.save(restaurant);
             return ResponseEntity.status(HttpStatus.CREATED).body(newCity);

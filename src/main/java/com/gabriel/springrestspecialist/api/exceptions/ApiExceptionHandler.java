@@ -1,6 +1,7 @@
 package com.gabriel.springrestspecialist.api.exceptions;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.Nullable;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -124,6 +126,33 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
             ApiExceptionType.RESOURCE_NOT_FOUND,
             status,
             detail).build();
+
+        return handleExceptionInternal(ex, exception, new HttpHeaders(), status, request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+        MethodArgumentNotValidException ex,
+        HttpHeaders headers,
+        HttpStatus status,
+        WebRequest request) {
+
+        String message = "One or more fields are invalid. Fill them up correctly and try again.";
+        String detail = String.format(message);
+
+        Set<ApiException.Field> fields = ex.getBindingResult()
+            .getFieldErrors()
+            .stream()
+            .map(fieldError -> ApiException.Field.builder()
+                .name(fieldError.getField())
+                .detail(fieldError.getDefaultMessage())
+                .build())
+            .collect(Collectors.toSet());
+
+        ApiException exception = apiExceptionBuilder(
+            ApiExceptionType.RESOURCE_NOT_FOUND,
+            status,
+            detail).fields(fields).build();
 
         return handleExceptionInternal(ex, exception, new HttpHeaders(), status, request);
     }

@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
@@ -21,6 +22,7 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode
 public abstract class BaseEntity {
+    @NotNull
     @Id
     @GeneratedValue(generator = "UUID", strategy = GenerationType.AUTO)
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
