@@ -79,6 +79,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, exception, new HttpHeaders(), status, request);
     }
 
+    @SuppressWarnings(value = "null")
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<Object> handleMethodArgumentTypeMismatchException(
         MethodArgumentTypeMismatchException ex,
