@@ -3,9 +3,13 @@ package com.gabriel.springrestspecialist.domain.models;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -16,8 +20,13 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
+import javax.validation.groups.ConvertGroup;
+import javax.validation.groups.Default;
+
+import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.gabriel.springrestspecialist.infrastructure.groups.ConstraintGroup;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -27,8 +36,15 @@ import lombok.Setter;
 @Table(name = "restaurants")
 @Getter
 @Setter
-@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+@EqualsAndHashCode(callSuper = false)
 public class Restaurant extends BaseEntity {
+    @NotNull
+    @Id
+    @GeneratedValue(generator = "UUID", strategy = GenerationType.AUTO)
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @EqualsAndHashCode.Include
+    public UUID id = UUID.randomUUID();
+
     @NotBlank
     private String name;
 
@@ -40,6 +56,7 @@ public class Restaurant extends BaseEntity {
 
     private Boolean isOpen = false;
 
+    @ConvertGroup(from = Default.class, to = ConstraintGroup.CreateRestaurant.class)
     @Valid
     @NotNull
     @ManyToOne

@@ -5,6 +5,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +31,9 @@ import com.gabriel.springrestspecialist.domain.exceptions.EntityNotFoundExceptio
 
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
+    @Autowired
+    private MessageSource messageSource;
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleUncaughtException(Exception ex, WebRequest request) {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -137,16 +143,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         HttpStatus status,
         WebRequest request) {
 
-        String message = "One or more fields are invalid. Fill them up correctly and try again.";
-        String detail = String.format(message);
+        String detail = String.format("One or more fields are invalid. Fill them up correctly and try again.");
 
         Set<ApiException.Field> fields = ex.getBindingResult()
             .getFieldErrors()
             .stream()
-            .map(fieldError -> ApiException.Field.builder()
-                .name(fieldError.getField())
-                .detail(fieldError.getDefaultMessage())
-                .build())
+            .map(fieldError -> {
+                String message = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
+                return ApiException.Field.builder()
+                    .name(fieldError.getField())
+                    .detail(message)
+                    .build();
+            })
             .collect(Collectors.toSet());
 
         ApiException exception = apiExceptionBuilder(

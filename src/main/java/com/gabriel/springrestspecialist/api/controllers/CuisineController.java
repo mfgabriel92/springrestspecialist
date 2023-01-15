@@ -3,6 +3,8 @@ package com.gabriel.springrestspecialist.api.controllers;
 import java.util.List;
 import java.util.UUID;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,7 +48,7 @@ public class CuisineController {
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public Cuisine save(@RequestBody Cuisine cuisine) {
+    public Cuisine save(@RequestBody @Valid Cuisine cuisine) {
         return service.save(cuisine);
     }
 
