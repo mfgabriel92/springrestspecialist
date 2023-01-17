@@ -6,18 +6,18 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import javax.validation.OverridesAttribute;
+import javax.validation.Constraint;
 import javax.validation.Payload;
-import javax.validation.constraints.PositiveOrZero;
 
 @Target({ FIELD })
 @Retention(RUNTIME)
-@PositiveOrZero
-public @interface ShippingFee {
-    @OverridesAttribute(constraint = PositiveOrZero.class, name = "message")
-    String message() default "{ShippingFee.invalid}";
+@Constraint(validatedBy = { MultiplyValidator.class })
+public @interface Multiply {
+    String message() default "Not divisible by the given number";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
+
+    int number() default 1;
 }
