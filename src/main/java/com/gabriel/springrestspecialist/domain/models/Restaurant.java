@@ -25,8 +25,8 @@ import javax.validation.groups.Default;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.gabriel.springrestspecialist.api.core.validation.annotations.FreeShipping;
 import com.gabriel.springrestspecialist.api.core.validation.annotations.Multiply;
-import com.gabriel.springrestspecialist.api.core.validation.annotations.ShippingFee;
 import com.gabriel.springrestspecialist.infrastructure.groups.ConstraintGroup;
 
 import lombok.EqualsAndHashCode;
@@ -38,6 +38,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = false)
+@FreeShipping(field = "shippingRate", description = "name", requiredDescription = "[Free Shipping] - ")
 public class Restaurant extends BaseEntity {
     @NotNull
     @Id
@@ -50,7 +51,7 @@ public class Restaurant extends BaseEntity {
     private String name;
 
     @NotNull
-    @ShippingFee
+    // @ShippingFee
     @Multiply(number = 4)
     private BigDecimal shippingRate;
 
