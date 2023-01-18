@@ -13,9 +13,9 @@ import javax.validation.constraints.PositiveOrZero;
 @Target({ FIELD })
 @Retention(RUNTIME)
 @PositiveOrZero
-public @interface ShippingFee {
+public @interface ShippingRate {
     @OverridesAttribute(constraint = PositiveOrZero.class, name = "message")
-    String message() default "{ShippingFee.invalid}";
+    String message() default "{ShippingRate.invalid}";
 
     Class<?>[] groups() default {};
 

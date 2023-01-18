@@ -19,6 +19,7 @@ import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 
@@ -26,7 +27,6 @@ import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gabriel.springrestspecialist.api.core.validation.annotations.FreeShipping;
-import com.gabriel.springrestspecialist.api.core.validation.annotations.Multiply;
 import com.gabriel.springrestspecialist.infrastructure.groups.ConstraintGroup;
 
 import lombok.EqualsAndHashCode;
@@ -51,8 +51,7 @@ public class Restaurant extends BaseEntity {
     private String name;
 
     @NotNull
-    // @ShippingFee
-    @Multiply(number = 4)
+    @PositiveOrZero
     private BigDecimal shippingRate;
 
     private Boolean isActive = false;

@@ -10,6 +10,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.SmartValidator;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gabriel.springrestspecialist.api.exceptions.ValidationException;
 import com.gabriel.springrestspecialist.domain.exceptions.DomainException;
 import com.gabriel.springrestspecialist.domain.exceptions.EntityNotFoundException;
 import com.gabriel.springrestspecialist.domain.models.Restaurant;
@@ -30,6 +33,9 @@ import com.gabriel.springrestspecialist.domain.services.RestaurantService;
 public class RestaurantController {
     @Autowired
     private RestaurantService service;
+
+    @Autowired
+    private SmartValidator validator;
 
     @GetMapping
     public ResponseEntity<List<Restaurant>> findAll() {
@@ -90,6 +96,9 @@ public class RestaurantController {
     @PutMapping("{id}")
     public ResponseEntity<Restaurant> save(@PathVariable UUID id, @RequestBody Restaurant restaurant) {
         Restaurant updatedRestaurant = service.findById(id);
+
+        validate(updatedRestaurant);
+
         BeanUtils.copyProperties(restaurant, updatedRestaurant, "id", "paymentMethods", "address", "products",
             "createdAt");
 
@@ -98,6 +107,8 @@ public class RestaurantController {
             return ResponseEntity.ok(updatedRestaurant);
         } catch (EntityNotFoundException e) {
             throw new DomainException(e.getMessage());
+        } catch (ValidationException e) {
+            throw new DomainException(e.getMessage());
         }
     }
 
@@ -105,5 +116,14 @@ public class RestaurantController {
     public ResponseEntity<?> deleteById(@PathVariable UUID id) {
         service.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    private void validate(Restaurant restaurant) {
+        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(restaurant, "restaurants");
+        validator.validate(restaurant, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            throw new ValidationException(bindingResult);
+        }
     }
 }
