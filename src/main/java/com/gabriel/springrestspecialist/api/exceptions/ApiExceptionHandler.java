@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.Nullable;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -145,13 +146,19 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         String detail = String.format("One or more fields are invalid. Fill them up correctly and try again.");
 
-        Set<ApiException.Field> fields = ex.getBindingResult()
-            .getFieldErrors()
+        Set<ApiException.Obj> objs = ex.getBindingResult()
+            .getAllErrors()
             .stream()
-            .map(fieldError -> {
-                String message = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
-                return ApiException.Field.builder()
-                    .name(fieldError.getField())
+            .map(objError -> {
+                String message = messageSource.getMessage(objError, LocaleContextHolder.getLocale());
+                String name = objError.getObjectName();
+
+                if (objError instanceof FieldError f) {
+                    name = ((FieldError) objError).getField();
+                }
+
+                return ApiException.Obj.builder()
+                    .name(name)
                     .detail(message)
                     .build();
             })
@@ -160,7 +167,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         ApiException exception = apiExceptionBuilder(
             ApiExceptionType.RESOURCE_NOT_FOUND,
             status,
-            detail).fields(fields).build();
+            detail).objs(objs).build();
 
         return handleExceptionInternal(ex, exception, new HttpHeaders(), status, request);
     }

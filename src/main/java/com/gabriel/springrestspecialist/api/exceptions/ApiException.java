@@ -18,11 +18,11 @@ public class ApiException {
     private String type;
     private String title;
     private String detail;
-    private Set<Field> fields;
+    private Set<Obj> objs;
 
     @Getter
     @Builder
-    public static class Field {
+    public static class Obj {
         private String name;
         private String detail;
     }
