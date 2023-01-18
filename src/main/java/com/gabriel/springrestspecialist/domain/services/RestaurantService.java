@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.gabriel.springrestspecialist.domain.exceptions.EntityInUseException;
 import com.gabriel.springrestspecialist.domain.exceptions.EntityNotFoundException;
@@ -58,6 +59,7 @@ public class RestaurantService {
         return restaurantRepository.findLatest().get();
     }
 
+    @Transactional
     public Restaurant save(Restaurant restaurant) {
         try {
             UUID cuisineId = restaurant.getCuisine().getId();
@@ -71,6 +73,7 @@ public class RestaurantService {
         }
     }
 
+    @Transactional
     public void deleteById(UUID id) {
         try {
             restaurantRepository.deleteById(id);
