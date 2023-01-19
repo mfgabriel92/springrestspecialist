@@ -25,7 +25,6 @@ import javax.validation.groups.Default;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gabriel.springrestspecialist.api.core.validation.annotations.FreeShipping;
 import com.gabriel.springrestspecialist.infrastructure.groups.ConstraintGroup;
 
@@ -64,16 +63,13 @@ public class Restaurant extends BaseEntity {
     @ManyToOne
     private Cuisine cuisine;
 
-    @JsonIgnore
     @Embedded
     private Address address;
 
-    @JsonIgnore
     @ManyToMany
     @JoinTable(name = "restaurants_payment_methods", joinColumns = @JoinColumn(name = "restaurant_id"), inverseJoinColumns = @JoinColumn(name = "payment_method_id"))
     private List<PaymentMethod> paymentMethods = new ArrayList<>();
 
-    @JsonIgnore
     @OneToMany(mappedBy = "restaurant")
     private List<Product> products = new ArrayList<>();
 }
