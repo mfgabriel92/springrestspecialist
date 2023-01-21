@@ -1,6 +1,6 @@
 package com.gabriel.springrestspecialist.domain.models;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
 
 import javax.persistence.MappedSuperclass;
 
@@ -17,8 +17,8 @@ import lombok.Setter;
 @EqualsAndHashCode
 public abstract class BaseEntity {
     @CreationTimestamp
-    public Date createdAt;
+    public OffsetDateTime createdAt;
 
     @UpdateTimestamp
-    public Date updatedAt;
+    public OffsetDateTime updatedAt;
 }

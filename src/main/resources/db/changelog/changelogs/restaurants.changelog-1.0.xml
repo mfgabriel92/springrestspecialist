@@ -24,21 +24,13 @@
             <column name="is_open" type="BOOLEAN">
                 <constraints nullable="false" />
             </column>
-            <column name="zip_code" type="VARCHAR">
-                <constraints nullable="false" />
-            </column>
-            <column name="street_name" type="VARCHAR">
-                <constraints nullable="false" />
-            </column>
-            <column name="street_number" type="VARCHAR">
-                <constraints nullable="false" />
-            </column>
+            <column name="zip_code" type="VARCHAR" />
+            <column name="street_name" type="VARCHAR" />
+            <column name="street_number" type="VARCHAR" />
             <column name="apartment_number" type="VARCHAR" />
-            <column name="neighborhood" type="VARCHAR">
-                <constraints nullable="false" />
-            </column>
-            <column name="cuisine_id" type="UUID"></column>
-            <column name="city_id" type="UUID"></column>
+            <column name="neighborhood" type="VARCHAR" />
+            <column name="cuisine_id" type="UUID" />
+            <column name="city_id" type="UUID" />
             <column name="created_at" type="TIMESTAMP" />
             <column name="updated_at" type="TIMESTAMP" />
         </createTable>
