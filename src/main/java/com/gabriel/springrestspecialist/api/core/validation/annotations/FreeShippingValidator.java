@@ -34,11 +34,12 @@ public class FreeShippingValidator implements ConstraintValidator<FreeShipping, 
         return isValid;
     }
 
+    @SuppressWarnings(value = "null")
     private Object invokePropertyDescriptor(Object obj, String field) {
         try {
             return BeanUtils.getPropertyDescriptor(obj.getClass(), field)
-                .getReadMethod()
-                .invoke(obj);
+                    .getReadMethod()
+                    .invoke(obj);
         } catch (Exception e) {
             throw new ValidationException(e);
         }
