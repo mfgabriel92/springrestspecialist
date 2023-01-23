@@ -1,4 +1,4 @@
-package com.gabriel.springrestspecialist.api.core.validation;
+package com.gabriel.springrestspecialist.core.validation;
 
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;

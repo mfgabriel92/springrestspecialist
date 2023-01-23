@@ -1,4 +1,4 @@
-package com.gabriel.springrestspecialist.api.core.validation.annotations;
+package com.gabriel.springrestspecialist.core.validation.annotations;
 
 import java.math.BigDecimal;
 
@@ -23,7 +23,6 @@ public class FreeShippingValidator implements ConstraintValidator<FreeShipping, 
     @Override
     public boolean isValid(Object obj, ConstraintValidatorContext context) {
         boolean isValid = true;
-
         BigDecimal fieldValue = (BigDecimal) invokePropertyDescriptor(obj, field);
         String descriptionValue = (String) invokePropertyDescriptor(obj, description);
 

@@ -1,4 +1,4 @@
-package com.gabriel.springrestspecialist.api.core.validation.annotations;
+package com.gabriel.springrestspecialist.core.validation.annotations;
 
 import java.math.BigDecimal;
 

@@ -36,7 +36,7 @@ public class RestaurantService {
     }
 
     public List<Restaurant> findByNameAndShippingRates(String name, BigDecimal lowestShippingRate,
-        BigDecimal highestShippingRate) {
+            BigDecimal highestShippingRate) {
         return restaurantRepository.findByNameAndShippingRates(name, lowestShippingRate, highestShippingRate);
     }
 
@@ -45,7 +45,7 @@ public class RestaurantService {
     }
 
     public List<Restaurant> findAllWithShippingRates() {
-        return restaurantRepository.findAllWithNoShippingRates();
+        return restaurantRepository.findAllWithShippingRates();
     }
 
     public Restaurant findById(UUID id) {

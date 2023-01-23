@@ -1,4 +1,4 @@
-package com.gabriel.springrestspecialist.api.core.validation.jackson;
+package com.gabriel.springrestspecialist.core.validation.jackson;
 
 import org.springframework.stereotype.Component;
 

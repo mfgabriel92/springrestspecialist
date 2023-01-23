@@ -23,6 +23,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gabriel.springrestspecialist.api.exceptions.ValidationException;
+import com.gabriel.springrestspecialist.api.mapper.RestaurantMapper;
+import com.gabriel.springrestspecialist.api.model.request.RestaurantRequestModel;
+import com.gabriel.springrestspecialist.api.model.response.RestaurantResponseModel;
 import com.gabriel.springrestspecialist.domain.exceptions.DomainException;
 import com.gabriel.springrestspecialist.domain.exceptions.EntityNotFoundException;
 import com.gabriel.springrestspecialist.domain.models.Restaurant;
@@ -37,74 +40,80 @@ public class RestaurantController {
     @Autowired
     private SmartValidator validator;
 
+    @Autowired
+    private RestaurantMapper mapper;
+
     @GetMapping
-    public ResponseEntity<List<Restaurant>> findAll() {
+    public ResponseEntity<List<RestaurantResponseModel>> findAll() {
         List<Restaurant> restaurants = service.findAll();
-        return ResponseEntity.ok(restaurants);
+        return ResponseEntity.ok(toCollectionModel(restaurants));
     }
 
     @GetMapping("by-no-shipping-rates")
-    public ResponseEntity<List<Restaurant>> findAllWithNoShippingRate() {
+    public ResponseEntity<List<RestaurantResponseModel>> findAllWithNoShippingRate() {
         List<Restaurant> restaurants = service.findAllWithNoShippingRates();
-        return ResponseEntity.ok(restaurants);
+        return ResponseEntity.ok(toCollectionModel(restaurants));
     }
 
     @GetMapping("by-name-and-shipping-rates")
-    public ResponseEntity<List<Restaurant>> findByNameAndShippingRates(
-        @RequestParam String name,
-        @RequestParam BigDecimal lowestShippingRate,
-        @RequestParam BigDecimal highestShippingRate) {
-        List<Restaurant> restaurants = service.findByNameAndShippingRates(name, lowestShippingRate,
-            highestShippingRate);
-        return ResponseEntity.ok(restaurants);
+    public ResponseEntity<List<RestaurantResponseModel>> findByNameAndShippingRates(
+            @RequestParam String name,
+            @RequestParam BigDecimal lowestShippingRate,
+            @RequestParam BigDecimal highestShippingRate) {
+        List<Restaurant> restaurants = service.findByNameAndShippingRates(
+                name,
+                lowestShippingRate,
+                highestShippingRate);
+        return ResponseEntity.ok(toCollectionModel(restaurants));
     }
 
     @GetMapping("by-cuisine")
-    public ResponseEntity<?> findByCuisineName(@RequestParam String cuisineName) {
+    public ResponseEntity<List<RestaurantResponseModel>> findByCuisineName(@RequestParam String cuisineName) {
         List<Restaurant> restaurants = service.findByCuisineName(cuisineName);
-        return ResponseEntity.ok(restaurants);
+        return ResponseEntity.ok(toCollectionModel(restaurants));
     }
 
     @GetMapping("by-with-shipping-rates")
-    public ResponseEntity<List<Restaurant>> findAllWithShippingRates() {
+    public ResponseEntity<List<RestaurantResponseModel>> findAllWithShippingRates() {
         List<Restaurant> restaurants = service.findAllWithShippingRates();
-        return ResponseEntity.ok(restaurants);
+        return ResponseEntity.ok(toCollectionModel(restaurants));
     }
 
     @GetMapping("latest")
-    public ResponseEntity<Restaurant> findLatest() {
+    public ResponseEntity<RestaurantResponseModel> findLatest() {
         Restaurant restaurant = service.findLatest();
-        return ResponseEntity.ok(restaurant);
+        return ResponseEntity.ok(mapper.toModel(restaurant));
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<?> findById(@PathVariable UUID id) {
+    public ResponseEntity<RestaurantResponseModel> findById(@PathVariable UUID id) {
         Restaurant restaurant = service.findById(id);
-        return ResponseEntity.ok(restaurant);
+        return ResponseEntity.ok(mapper.toModel(restaurant));
     }
 
     @PostMapping
-    public ResponseEntity<Restaurant> save(@RequestBody @Valid Restaurant restaurant) {
+    public ResponseEntity<RestaurantResponseModel> save(@RequestBody @Valid RestaurantRequestModel request) {
         try {
-            Restaurant newCity = service.save(restaurant);
-            return ResponseEntity.status(HttpStatus.CREATED).body(newCity);
+            Restaurant restaurant = service.save(mapper.toDomainObject(request));
+            return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toModel(restaurant));
         } catch (EntityNotFoundException e) {
             throw new DomainException(e.getMessage());
         }
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Restaurant> save(@PathVariable UUID id, @RequestBody Restaurant restaurant) {
+    public ResponseEntity<RestaurantResponseModel> save(@PathVariable UUID id,
+            @RequestBody RestaurantRequestModel request) {
         Restaurant updatedRestaurant = service.findById(id);
 
         validate(updatedRestaurant);
 
-        BeanUtils.copyProperties(restaurant, updatedRestaurant, "id", "paymentMethods", "address", "products",
-            "createdAt");
+        BeanUtils.copyProperties(request, updatedRestaurant, "id", "paymentMethods", "address", "products",
+                "createdAt");
 
         try {
-            service.save(updatedRestaurant);
-            return ResponseEntity.ok(updatedRestaurant);
+            service.save(mapper.toDomainObject(request));
+            return ResponseEntity.ok(mapper.toModel(updatedRestaurant));
         } catch (EntityNotFoundException e) {
             throw new DomainException(e.getMessage());
         } catch (ValidationException e) {
@@ -113,7 +122,7 @@ public class RestaurantController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteById(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteById(@PathVariable UUID id) {
         service.deleteById(id);
         return ResponseEntity.noContent().build();
     }
@@ -125,5 +134,10 @@ public class RestaurantController {
         if (bindingResult.hasErrors()) {
             throw new ValidationException(bindingResult);
         }
+    }
+
+    private List<RestaurantResponseModel> toCollectionModel(List<Restaurant> restaurants) {
+        List<RestaurantResponseModel> response = mapper.toCollectionModel(restaurants);
+        return response;
     }
 }

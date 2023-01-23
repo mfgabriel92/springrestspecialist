@@ -12,9 +12,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.PositiveOrZero;
 
-import com.gabriel.springrestspecialist.api.core.validation.annotations.FreeShipping;
+import com.gabriel.springrestspecialist.core.validation.annotations.FreeShipping;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -29,7 +28,6 @@ import lombok.Setter;
 public class Restaurant extends BaseEntity {
     private String name;
 
-    @PositiveOrZero
     private BigDecimal shippingRate;
     private Boolean isActive = false;
     private Boolean isOpen = false;

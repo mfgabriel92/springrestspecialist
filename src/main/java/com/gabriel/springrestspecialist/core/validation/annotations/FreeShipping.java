@@ -1,4 +1,4 @@
-package com.gabriel.springrestspecialist.api.core.validation.annotations;
+package com.gabriel.springrestspecialist.core.validation.annotations;
 
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
