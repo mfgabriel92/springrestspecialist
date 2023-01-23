@@ -11,6 +11,6 @@ import lombok.Setter;
 public class RestaurantResponseModel {
     private UUID id;
     private String name;
-    private BigDecimal shippingRate;
+    private BigDecimal fee;
     private CuisineResponseModel cuisine;
 }
