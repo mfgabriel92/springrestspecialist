@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import com.gabriel.springrestspecialist.api.model.request.RestaurantRequestModel;
 import com.gabriel.springrestspecialist.api.model.response.RestaurantResponseModel;
+import com.gabriel.springrestspecialist.domain.models.Cuisine;
 import com.gabriel.springrestspecialist.domain.models.Restaurant;
 
 @Component
@@ -28,5 +29,11 @@ public class RestaurantMapper {
 
     public Restaurant toDomainObject(RestaurantRequestModel request) {
         return mapper.map(request, Restaurant.class);
+    }
+
+    public void copyToDomainObject(RestaurantRequestModel request, Restaurant restaurant) {
+        // To avoid 'identifier of cuisine being altered' exception
+        restaurant.setCuisine(new Cuisine());
+        mapper.map(request, restaurant);
     }
 }

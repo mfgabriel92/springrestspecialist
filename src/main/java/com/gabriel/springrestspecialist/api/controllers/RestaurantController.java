@@ -6,12 +6,9 @@ import java.util.UUID;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.SmartValidator;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,21 +35,18 @@ public class RestaurantController {
     private RestaurantService service;
 
     @Autowired
-    private SmartValidator validator;
-
-    @Autowired
     private RestaurantMapper mapper;
 
     @GetMapping
     public ResponseEntity<List<RestaurantResponseModel>> findAll() {
         List<Restaurant> restaurants = service.findAll();
-        return ResponseEntity.ok(toCollectionModel(restaurants));
+        return ResponseEntity.ok(mapper.toCollectionModel(restaurants));
     }
 
     @GetMapping("by-no-shipping-rates")
     public ResponseEntity<List<RestaurantResponseModel>> findAllWithNoShippingRate() {
         List<Restaurant> restaurants = service.findAllWithNoShippingRates();
-        return ResponseEntity.ok(toCollectionModel(restaurants));
+        return ResponseEntity.ok(mapper.toCollectionModel(restaurants));
     }
 
     @GetMapping("by-name-and-shipping-rates")
@@ -64,19 +58,19 @@ public class RestaurantController {
                 name,
                 lowestShippingRate,
                 highestShippingRate);
-        return ResponseEntity.ok(toCollectionModel(restaurants));
+        return ResponseEntity.ok(mapper.toCollectionModel(restaurants));
     }
 
     @GetMapping("by-cuisine")
     public ResponseEntity<List<RestaurantResponseModel>> findByCuisineName(@RequestParam String cuisineName) {
         List<Restaurant> restaurants = service.findByCuisineName(cuisineName);
-        return ResponseEntity.ok(toCollectionModel(restaurants));
+        return ResponseEntity.ok(mapper.toCollectionModel(restaurants));
     }
 
     @GetMapping("by-with-shipping-rates")
     public ResponseEntity<List<RestaurantResponseModel>> findAllWithShippingRates() {
         List<Restaurant> restaurants = service.findAllWithShippingRates();
-        return ResponseEntity.ok(toCollectionModel(restaurants));
+        return ResponseEntity.ok(mapper.toCollectionModel(restaurants));
     }
 
     @GetMapping("latest")
@@ -102,17 +96,14 @@ public class RestaurantController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<RestaurantResponseModel> save(@PathVariable UUID id,
+    public ResponseEntity<RestaurantResponseModel> save(
+            @PathVariable UUID id,
             @RequestBody RestaurantRequestModel request) {
         Restaurant updatedRestaurant = service.findById(id);
 
-        validate(updatedRestaurant);
-
-        BeanUtils.copyProperties(request, updatedRestaurant, "id", "paymentMethods", "address", "products",
-                "createdAt");
-
         try {
-            service.save(mapper.toDomainObject(request));
+            mapper.copyToDomainObject(request, updatedRestaurant);
+            service.save(updatedRestaurant);
             return ResponseEntity.ok(mapper.toModel(updatedRestaurant));
         } catch (EntityNotFoundException e) {
             throw new DomainException(e.getMessage());
@@ -125,19 +116,5 @@ public class RestaurantController {
     public ResponseEntity<Void> deleteById(@PathVariable UUID id) {
         service.deleteById(id);
         return ResponseEntity.noContent().build();
-    }
-
-    private void validate(Restaurant restaurant) {
-        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(restaurant, "restaurants");
-        validator.validate(restaurant, bindingResult);
-
-        if (bindingResult.hasErrors()) {
-            throw new ValidationException(bindingResult);
-        }
-    }
-
-    private List<RestaurantResponseModel> toCollectionModel(List<Restaurant> restaurants) {
-        List<RestaurantResponseModel> response = mapper.toCollectionModel(restaurants);
-        return response;
     }
 }

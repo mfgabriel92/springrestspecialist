@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gabriel.springrestspecialist.api.mapper.CuisineMapper;
+import com.gabriel.springrestspecialist.api.model.response.CuisineResponseModel;
 import com.gabriel.springrestspecialist.domain.models.Cuisine;
 import com.gabriel.springrestspecialist.domain.services.CuisineService;
 
@@ -28,22 +30,25 @@ public class CuisineController {
     @Autowired
     private CuisineService service;
 
+    @Autowired
+    private CuisineMapper mapper;
+
     @GetMapping
-    public ResponseEntity<List<Cuisine>> findAll() {
+    public ResponseEntity<List<CuisineResponseModel>> findAll() {
         List<Cuisine> cuisines = service.findAll();
-        return ResponseEntity.ok(cuisines);
+        return ResponseEntity.ok(mapper.toCollectionModel(cuisines));
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<?> findById(@PathVariable UUID id) {
+    public ResponseEntity<CuisineResponseModel> findById(@PathVariable UUID id) {
         Cuisine cuisine = service.findById(id);
-        return ResponseEntity.ok(cuisine);
+        return ResponseEntity.ok(mapper.toModel(cuisine));
     }
 
     @GetMapping("by-name")
-    public ResponseEntity<?> findByName(@RequestParam String name) {
+    public ResponseEntity<CuisineResponseModel> findByName(@RequestParam String name) {
         Cuisine cuisine = service.findOneByName(name);
-        return ResponseEntity.ok(cuisine);
+        return ResponseEntity.ok(mapper.toModel(cuisine));
     }
 
     @PostMapping
@@ -53,13 +58,13 @@ public class CuisineController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<?> save(@PathVariable UUID id, @RequestBody Cuisine cuisine) {
+    public ResponseEntity<CuisineResponseModel> save(@PathVariable UUID id, @RequestBody Cuisine cuisine) {
         Cuisine updatedCuisine = service.save(id, cuisine);
-        return ResponseEntity.ok(updatedCuisine);
+        return ResponseEntity.ok(mapper.toModel(updatedCuisine));
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteById(@PathVariable UUID id) {
+    public ResponseEntity<CuisineResponseModel> deleteById(@PathVariable UUID id) {
         service.deleteById(id);
         return ResponseEntity.noContent().build();
     }
